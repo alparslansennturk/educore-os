@@ -195,7 +195,7 @@
 @utility display-xl { font-family: var(--font-inter); font-size: var(--font-size-14xl); font-weight: var(--font-weight-extrabold); line-height: var(--line-height-12xl); letter-spacing: var(--letter-spacing-xxs); }
 @utility display-lg { font-family: var(--font-inter); font-size: var(--font-size-13xl); font-weight: var(--font-weight-extrabold); line-height: var(--line-height-11xl); letter-spacing: var(--letter-spacing-xs); }
 @utility display-md { font-family: var(--font-inter); font-size: var(--font-size-12xl); font-weight: var(--font-weight-extrabold); line-height: var(--line-height-10xl); letter-spacing: var(--letter-spacing-sm); }
-@utility display-sm { font-family: var(--font-inter); font-size: var(--font-size-11xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-9xl); letter-spacing: var(--letter-spacing-sm); }
+@utility display-sm { font-family: var(--font-inter); font-size: var(--font-size-11xl); font-weight: var(--font-weight-extrabold); line-height: var(--line-height-9xl); letter-spacing: var(--letter-spacing-sm); }
 
 /* 4. UI Helper */
 @utility ui-helper-md { font-family: var(--font-inter); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); line-height: var(--line-height-md); letter-spacing: var(--letter-spacing-md); }
