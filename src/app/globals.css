@@ -6,7 +6,7 @@
      ============================================================ */
 
   /* --- BASE COLORS --- */
-  --color-base-primary-50: #f4f7fb;
+  --color-base-primary-50:  #f4f7fb;
   --color-base-primary-100: #dde8f8;
   --color-base-primary-200: #bcd2f1;
   --color-base-primary-300: #92b6e8;
@@ -17,7 +17,7 @@
   --color-base-primary-800: #183e72;
   --color-base-primary-900: #10294c;
 
-  --color-base-secondary-50: #f0f7f7;
+  --color-base-secondary-50:  #f0f7f7;
   --color-base-secondary-100: #daeaea;
   --color-base-secondary-200: #b9d6d7;
   --color-base-secondary-300: #8bbabc;
@@ -29,7 +29,7 @@
   --color-base-secondary-900: #23393c;
 
   /* --- DESIGN STUDIO --- */
-  --color-designstudio-primary-50: #FFF4EB;
+  --color-designstudio-primary-50:  #FFF4EB;
   --color-designstudio-primary-100: #FFE9D6;
   --color-designstudio-primary-200: #FFD4AD;
   --color-designstudio-primary-300: #FFB97A;
@@ -40,7 +40,7 @@
   --color-designstudio-primary-800: #AD5100;
   --color-designstudio-primary-900: #853E00;
 
-  --color-designstudio-secondary-50: #F1F2FD;
+  --color-designstudio-secondary-50:  #F1F2FD;
   --color-designstudio-secondary-100: #DDE0FA;
   --color-designstudio-secondary-200: #C2C6F4;
   --color-designstudio-secondary-300: #A7ADEE;
@@ -84,6 +84,16 @@
   --color-text-placeholder: #AEB4C0;
   --color-text-disabled: #CDD2DA;
   --color-text-inverse: #FFFFFF;
+  --color-text-base-primary: #3A7BD5;
+  --color-text-base-secondary: #3D7A7E;
+  --color-text-designstudio-primary: #FF8D28;
+  --color-text-designstudio-secondary: #6F74D8;
+  --color-text-success: #009F3E;
+  --color-text-danger: #FF4D4D;  
+  --color-text-warning: #FFB020;
+  --color-text-info: #3A7BD5; 
+
+
 
   /* --- STATUS --- */
   --color-status-danger-50: #FFECEC;
