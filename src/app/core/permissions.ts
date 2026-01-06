@@ -2,8 +2,8 @@
  * FLEX OS - Centralized Permission Resolver
  * Kullanıcının belirli bir eyleme yetkisi olup olmadığını denetler.
  */
-import { UserDocument } from '@/app/types/user'; // Buraya 'app' ekledik
-import { Permission, ROLES } from '@/app/lib/constants'; // Burası zaten doğru
+import { UserDocument } from '@/app/types/user'; 
+import { Permission, ROLES } from '@/app/lib/constants'; 
 
 /**
  * Kullanıcının yetkisini kontrol eder.

@@ -9,6 +9,8 @@ export const COLLECTIONS = {
   DESIGN_ATTENDANCE: 'design_attendance',
 } as const;
 
+export type CollectionName = typeof COLLECTIONS[keyof typeof COLLECTIONS];
+
 export const ROLES = {
   ADMIN: 'admin',
   TRAINER: 'trainer',
@@ -30,6 +32,7 @@ export const PERMISSIONS = {
 } as const;
 
 export type UserPermission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
+export type Permission = UserPermission; 
 
 export const TASK_STATUS = {
   PENDING: 'PENDING',
@@ -38,3 +41,13 @@ export const TASK_STATUS = {
 } as const;
 
 export type TaskStatus = typeof TASK_STATUS[keyof typeof TASK_STATUS];
+
+// Sadece senin renk değişkenlerinden beslenecek Mesaj Tipleri
+export const MESSAGE_TYPES = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
+  SUCCESS: 'success',
+} as const;
+
+export type MessageType = typeof MESSAGE_TYPES[keyof typeof MESSAGE_TYPES];
