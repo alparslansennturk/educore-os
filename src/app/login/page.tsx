@@ -3,9 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, ChevronRight, Loader2, Check } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Yönlendirme için
+import { auth } from "../lib/firebase"; // Firebase bağlantımız
+import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase giriş fonksiyonu
 import { getFlexMessage } from "../lib/messages";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -21,17 +25,26 @@ export default function LoginPage() {
     }
   }, [shake]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setIsLoading(true);
 
-    setTimeout(() => {
-      const messageObj = getFlexMessage("auth/wrong-password");
+    try {
+      // Gerçek Firebase Giriş İşlemi
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      // Giriş başarılıysa Dashboard'a uçuyoruz
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Giriş Hatası:", error.code);
+      // Firebase'den gelen hata koduna göre mesajı getiriyoruz
+      const messageObj = getFlexMessage(error.code);
       setErrors({ general: messageObj.text });
-      setIsLoading(false);
       setShake(true);
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -52,14 +65,13 @@ export default function LoginPage() {
         }
         .animate-fast-shake { animation: fast-shake 0.15s ease-in-out; }
         
-        /* Şifremi Unuttum Sade Hover: Hareket yok, sadece renk değişimi */
         .forgot-password-link {
           color: var(--color-text-muted);
           text-decoration: none;
         }
         .forgot-password-link:hover {
-          color: var(--color-text-primary); /* Daha koyu türev */
-          text-decoration: underline; /* Seçilebilir olduğunu belli eden tek jilet detay */
+          color: var(--color-text-primary);
+          text-decoration: underline;
         }
       ` }} />
 
@@ -94,6 +106,7 @@ export default function LoginPage() {
                 backgroundColor: errors.general ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
                 color: 'var(--color-text-primary)'
               }}
+              required
             />
           </div>
 
@@ -111,6 +124,7 @@ export default function LoginPage() {
                   backgroundColor: errors.general ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
                   color: 'var(--color-text-primary)'
                 }}
+                required
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer transition-colors" style={{ color: 'var(--color-text-placeholder)' }}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
