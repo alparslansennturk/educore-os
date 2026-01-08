@@ -17,7 +17,7 @@ export const FLEX_MESSAGES: Record<string, FlexMessage> = {
     type: 'error'
   },
   'auth/user-not-found': {
-    text: 'Giriş bilgileri hatalı',
+    text: 'Böyle bir kullanıcı yok',
     type: 'error'
   },
   'auth/wrong-password': {
@@ -62,6 +62,10 @@ export const FLEX_MESSAGES: Record<string, FlexMessage> = {
   },
   'auth/activation-success': {
     text: 'Hesap başarıyla aktifleştirildi',
+    type: 'success'
+  },
+    'auth/reset-email-sent': {
+    text: 'E-Posta Başarıyla Gönderildi',
     type: 'success'
   }
 };

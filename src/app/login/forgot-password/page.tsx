@@ -1,29 +1,38 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Loader2, ShieldCheck, Check, ChevronRight } from "lucide-react";
+import { KeyRound, ChevronRight, Loader2, ArrowLeft, Check } from "lucide-react";
+import Link from "next/link";
 import { getFlexMessage } from "../../lib/messages";
 
-export default function ActivatePage() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
-  const [isSuccess, setIsSuccess] = useState(true); 
-  const [error, setError] = useState("Parola kriterleri karşılanmıyor");
+  // GERÇEK AKIŞ: Başlangıçta mesajlar kapalı. 
+  // (Test etmek istersen isSent'i true yapabilirsin)
+  const [isSent, setIsSent] = useState(true); 
+  const [error, setError] = useState(""); 
   const [shouldShake, setShouldShake] = useState(false);
 
-  const handleActivate = (e: React.FormEvent) => {
+  const handleResetRequest = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsSent(false);
     setShouldShake(false);
     setIsLoading(true);
 
+    // GERÇEK TEST SİMÜLASYONU
     setTimeout(() => {
       setIsLoading(false);
-      setError("Parola kriterleri karşılanmıyor");
+      
+      // Senaryo: Kullanıcı yoksa titret ve mesajı messages.ts'den çek
+      const userNotFoundError = getFlexMessage('auth/user-not-found').text;
+      setError(userNotFoundError);
       setShouldShake(true);
+
+      // Başarı durumunda isSent(true) yapılacak ve error("") olacak.
+      
       setTimeout(() => setShouldShake(false), 500);
     }, 1000);
   };
@@ -32,7 +41,6 @@ export default function ActivatePage() {
     <div 
       className="min-h-screen w-full flex items-center justify-center p-6 font-inter antialiased"
       style={{ 
-        /* Senin Login sayfasında oturttuğun o jilet ayar: %75 yayılım */
         background: 'linear-gradient(160deg, var(--color-base-primary-300) 0%, var(--color-base-secondary-300) 75%)'
       }}
     >
@@ -50,60 +58,38 @@ export default function ActivatePage() {
 
       <div className={`w-full max-w-[614px] bg-surface-white p-[56px] rounded-radius-16 shadow-2xl flex flex-col relative transition-all duration-300 origin-center 2xl:scale-110 ${shouldShake ? "animate-fast-shake" : ""}`}>
         
+        {/* Üst Bilgi: İkon + Başlık | Sağda Logo */}
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-2">
-            <ShieldCheck size={24} style={{ color: 'var(--color-neutral-900)' }} />
+            <KeyRound size={24} style={{ color: 'var(--color-neutral-900)' }} />
             <h2 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
-              Hesabı Aktifleştir
+              Şifremi Unuttum
             </h2>
           </div>
-          <div className="text-[24px] font-bold flex items-center font-inter">
+          <div className="text-[24px] font-bold flex items-center">
             <span style={{ color: 'var(--color-designstudio-primary-500)' }}>tasarım</span>
             <span style={{ color: 'var(--color-accent-purple-500)' }}>atölyesi</span>
           </div>
         </div>
 
-        <form onSubmit={handleActivate} className="w-full flex flex-col font-inter">
+        <form onSubmit={handleResetRequest} className="w-full flex flex-col font-inter">
           <div className="flex flex-col gap-6">
             
+            {/* E-Posta Alanı */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-end h-5">
-                <label className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>Yeni Parola</label>
+                <label className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>E-Posta</label>
                 {error && (
                   <span className="ui-helper-sm animate-in fade-in duration-200 font-semibold" style={{ color: 'var(--color-status-danger-500)' }}>
                     {error}
                   </span>
                 )}
               </div>
-              <div className="relative w-full">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full h-12 pl-4 pr-12 border rounded-radius-8 text-sm outline-none transition-all duration-200"
-                  style={{ 
-                    borderColor: error ? 'var(--color-status-danger-500)' : 'var(--color-surface-200)',
-                    backgroundColor: error ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
-                    color: 'var(--color-text-primary)'
-                  }}
-                />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer transition-colors" style={{ color: error ? 'var(--color-status-danger-500)' : 'var(--color-text-placeholder)' }}>
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-              <p className="text-[12.5px] leading-normal text-right italic font-medium opacity-100 tracking-tight" style={{ color: 'var(--color-text-muted)' }}>
-                Parola en az 8 karakter olmalı, en az 1 büyük harf ve 1 rakam içermelidir.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>Yeni Parola (Tekrar)</label>
               <input
-                type={showPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••••••"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="E-Posta Giriniz"
                 className="w-full h-12 px-4 border rounded-radius-8 text-sm outline-none transition-all duration-200"
                 style={{ 
                   borderColor: error ? 'var(--color-status-danger-500)' : 'var(--color-surface-200)',
@@ -113,7 +99,7 @@ export default function ActivatePage() {
               />
             </div>
 
-            <div className="flex flex-col items-start pt-2">
+            <div className="flex flex-col pt-2">
               <button 
                 type="submit" 
                 disabled={isLoading} 
@@ -127,24 +113,37 @@ export default function ActivatePage() {
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="animate-spin" size={20} />
-                    <span className="ui-helper-sm tracking-wide">Kontrol Ediliyor...</span>
+                    <span className="ui-helper-sm tracking-wide font-semibold">Kontrol Ediliyor...</span>
                   </div>
                 ) : (
                   <>
-                    <span>Parolayı Oluştur</span>
+                    <span>Devam Et</span>
                     <ChevronRight size={18} />
                   </>
                 )}
               </button>
 
-              {isSuccess && (
-                <div className="mt-6 flex items-center gap-2.5 animate-in fade-in slide-in-from-top-2" style={{ color: 'var(--color-status-success-500)' }}>
-                  <Check size={18} strokeWidth={3} className="shrink-0" />
-                  <span className="text-[14px] font-semibold tracking-tight leading-none">
-                    {getFlexMessage('auth/activation-success').text}
-                  </span>
-                </div>
-              )}
+              {/* Alt Linkler ve Durum Mesajları */}
+              <div className="mt-6 flex justify-between items-center w-full">
+                <Link 
+                  href="/login" 
+                  className="flex items-center gap-2 text-[13px] font-semibold transition-colors hover:opacity-80"
+                  style={{ color: '#3A7BD5' }} 
+                >
+                  <ArrowLeft size={16} />
+                  <span>Giriş Ekranına Geri Dön</span>
+                </Link>
+
+                {/* Başarı Mesajı: Sadece işlem başarılı olduğunda sağ altta jilet gibi belirecek */}
+                {isSent && (
+                  <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-300">
+                    <Check size={16} strokeWidth={3} style={{ color: 'var(--color-status-success-500)' }} />
+                    <span className="text-[13px] font-semibold tracking-tight" style={{ color: 'var(--color-status-success-500)' }}>
+                      {getFlexMessage('auth/reset-email-sent').text}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </form>

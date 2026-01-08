@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, ChevronRight, Loader2, Check } from "lucide-react";
+import Link from "next/link";
 import { getFlexMessage } from "../lib/messages";
 
 export default function LoginPage() {
@@ -34,45 +35,84 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 bg-linear-to-br from-base-primary-300 to-base-secondary-300 font-inter antialiased">
+    <div 
+      className="min-h-screen w-full flex items-center justify-center p-6 font-inter antialiased"
+      style={{ 
+        background: 'linear-gradient(160deg, var(--color-base-primary-300) 0%, var(--color-base-secondary-300) 75%)'
+      }}
+    >
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes fast-shake {
+          0% { transform: translateX(0); }
+          20% { transform: translateX(-12px); }
+          40% { transform: translateX(12px); }
+          60% { transform: translateX(-12px); }
+          80% { transform: translateX(12px); }
+          100% { transform: translateX(0); }
+        }
+        .animate-fast-shake { animation: fast-shake 0.15s ease-in-out; }
+        
+        /* Şifremi Unuttum Sade Hover: Hareket yok, sadece renk değişimi */
+        .forgot-password-link {
+          color: var(--color-text-muted);
+          text-decoration: none;
+        }
+        .forgot-password-link:hover {
+          color: var(--color-text-primary); /* Daha koyu türev */
+          text-decoration: underline; /* Seçilebilir olduğunu belli eden tek jilet detay */
+        }
+      ` }} />
+
       <div className={`w-full max-w-[614px] bg-surface-white p-[56px] rounded-radius-16 shadow-2xl flex flex-col relative transition-all duration-300 origin-center 2xl:scale-110 ${shake ? 'animate-fast-shake' : ''}`}>
         
-        <div className="flex justify-between items-center mb-10 text-text-primary">
-          <h2 className="text-2xl font-bold tracking-tight">Kullanıcı Girişi</h2>
-          <div className="text-xl font-bold flex items-center gap-2">
-            <span className="opacity-10 font-light">|</span>
-            <span className="text-designstudio-primary-500">tasarımatölyesi</span>
+        <div className="flex justify-between items-center mb-10">
+          <h2 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Kullanıcı Girişi</h2>
+          <div className="text-[24px] font-bold flex items-center font-inter">
+            <span style={{ color: 'var(--color-designstudio-primary-500)' }}>tasarım</span>
+            <span style={{ color: 'var(--color-accent-purple-500)' }}>atölyesi</span>
           </div>
         </div>
 
         <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <div className="flex justify-between items-center h-5">
-              <label className="text-sm font-bold text-text-primary uppercase tracking-tight">E-Posta</label>
-              {errors.general && <span className="ui-helper-sm text-status-danger-500 animate-in fade-in duration-200">{errors.general}</span>}
+              <label className="text-sm font-bold">E-Posta</label>
+              {errors.general && (
+                <span className="ui-helper-sm animate-in fade-in duration-200 font-semibold" style={{ color: 'var(--color-status-danger-500)' }}>
+                  {errors.general}
+                </span>
+              )}
             </div>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="E-Posta Giriniz"
-              className={`w-full h-12 px-4 border rounded-radius-8 text-sm outline-none transition-all duration-200 
-                ${errors.general ? 'border-status-danger-500 bg-status-danger-50 text-status-danger-900' : 'border-surface-200 bg-surface-50 focus:ring-2 focus:ring-base-primary-500/20'}`}
+              className="w-full h-12 px-4 border rounded-radius-8 text-sm outline-none transition-all duration-200"
+              style={{ 
+                borderColor: errors.general ? 'var(--color-status-danger-500)' : 'var(--color-surface-200)',
+                backgroundColor: errors.general ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
+                color: 'var(--color-text-primary)'
+              }}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-bold text-text-primary uppercase tracking-tight">Parola</label>
+            <label className="text-sm font-bold">Parola</label>
             <div className="relative w-full">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className={`w-full h-12 pl-4 pr-12 border rounded-radius-8 text-sm outline-none transition-all duration-200 
-                  ${errors.general ? 'border-status-danger-500 bg-status-danger-50 text-status-danger-900' : 'border-surface-200 bg-surface-50 focus:ring-2 focus:ring-base-primary-500/20'}`}
+                className="w-full h-12 pl-4 pr-12 border rounded-radius-8 text-sm outline-none transition-all duration-200"
+                style={{ 
+                  borderColor: errors.general ? 'var(--color-status-danger-500)' : 'var(--color-surface-200)',
+                  backgroundColor: errors.general ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
+                  color: 'var(--color-text-primary)'
+                }}
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-placeholder hover:text-text-secondary cursor-pointer transition-colors">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer transition-colors" style={{ color: 'var(--color-text-placeholder)' }}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -87,16 +127,27 @@ export default function LoginPage() {
                   onChange={() => setRememberMe(!rememberMe)}
                   className="peer appearance-none w-4.5 h-4.5 rounded-[4px] border border-surface-300 checked:bg-base-primary-500 checked:border-base-primary-500 transition-all cursor-pointer" 
                 />
-                <Check size={12} strokeWidth={4} className={`absolute text-white pointer-events-none transition-opacity duration-200 ${rememberMe ? 'opacity-100' : 'opacity-0'}`} />
+                <Check size={12} strokeWidth={4} className="absolute text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity duration-200" />
               </div>
-              <span className="ui-helper-sm text-text-secondary group-hover:text-text-primary transition-colors">Beni Hatırla</span>
+              <span className="ui-helper-sm transition-colors" style={{ color: 'var(--color-text-secondary)' }}>Beni Hatırla</span>
             </label>
-            <button type="button" className="ui-helper-sm text-text-secondary hover:text-text-primary cursor-pointer transition-colors">Şifremi Unuttum</button>
+            
+            <Link 
+              href="/login/forgot-password" 
+              className="ui-helper-sm forgot-password-link font-semibold cursor-pointer transition-colors"
+            >
+              Şifremi Unuttum
+            </Link>
           </div>
 
-          <button type="submit" disabled={isLoading} className="w-full h-12 bg-designstudio-primary-500 hover:bg-designstudio-primary-600 text-text-inverse rounded-radius-8 font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-70 shadow-lg shadow-designstudio-primary-500/10">
+          <button type="submit" disabled={isLoading} className="w-full h-12 rounded-radius-8 font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-70 shadow-lg"
+            style={{ 
+              backgroundColor: 'var(--color-designstudio-primary-500)', 
+              color: 'var(--color-text-inverse)',
+              boxShadow: '0 10px 15px -3px var(--color-designstudio-primary-500-20)'
+            }}>
             {isLoading ? (
-              <div className="flex items-center gap-2 animate-pulse">
+              <div className="flex items-center gap-2">
                 <Loader2 className="animate-spin" size={20} />
                 <span className="ui-helper-sm tracking-wide">Kontrol Ediliyor...</span>
               </div>
@@ -109,20 +160,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="absolute right-[56px] bottom-[16px] text-[11px] text-text-placeholder font-bold opacity-40 uppercase tracking-widest italic">v2.0</div>
+        <div className="absolute right-[56px] bottom-[16px] text-[11px] font-bold opacity-40 uppercase tracking-widest italic" style={{ color: 'var(--color-text-placeholder)' }}>v2.0</div>
       </div>
-
-      <style jsx global>{`
-        @keyframes fast-shake {
-          0% { transform: translateX(0); }
-          20% { transform: translateX(-12px); }
-          40% { transform: translateX(12px); }
-          60% { transform: translateX(-12px); }
-          80% { transform: translateX(12px); }
-          100% { transform: translateX(0); }
-        }
-        .animate-fast-shake { animation: fast-shake 0.15s ease-in-out; }
-      `}</style>
     </div>
   );
 }
