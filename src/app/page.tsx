@@ -1,113 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, EyeOff, ChevronRight, Loader2 } from "lucide-react";
+import React from "react";
+import { Lock, Construction } from "lucide-react";
+import Link from "next/link";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string }>({});
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrors({});
-    setIsLoading(true);
-    
-    setTimeout(() => {
-        setErrors({ email: "Giriş bilgileri hatalı" });
-        setIsLoading(false);
-    }, 1500);
-  };
-
+export default function RootPage() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 bg-linear-to-br from-base-primary-300 to-base-secondary-300">
-      
-      <div className="w-full max-w-120 bg-surface-white p-10 rounded-radius-16 shadow-2xl flex flex-col relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 bg-linear-to-br from-base-primary-300 to-base-secondary-300">
+      <div className="w-full max-w-[614px] bg-surface-white p-[56px] rounded-radius-16 shadow-2xl flex flex-col items-center text-center transition-all duration-300 2xl:scale-110">
         
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-xl font-bold text-text-primary tracking-tight">Kullanıcı Girişi</h1>
-          <div className="text-lg font-bold text-transparent bg-clip-text bg-linear-to-r from-designstudio-primary-500 to-accent-purple-500">
-            tasarımatölyesi
-          </div>
+        {/* Logo Bölümü */}
+        <div className="text-3xl font-bold flex items-center gap-3 mb-8">
+          <span className="text-designstudio-primary-500">tasarımatölyesi</span>
+          <span className="text-text-primary opacity-10 font-light">|</span>
+          <span className="text-text-primary uppercase tracking-[0.2em] text-sm">flex os</span>
         </div>
 
-        <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
-          
-          {/* E-POSTA ALANI */}
-          <div className="flex flex-col gap-2">
-            
-            <div className="flex justify-between items-center h-5">
-              <label className="text-sm font-bold text-text-primary uppercase tracking-wider opacity-80">
-                E-Posta
-              </label>
-              
-              {/* STATUS-DANGER-500: Saf kırmızı yazı */}
-              <span className={`text-[12px] font-bold text-status-danger-500 transition-opacity duration-200 ${errors.email ? 'opacity-100' : 'opacity-0'}`}>
-                {errors.email || ""}
-              </span>
-            </div>
+        <div className="w-20 h-20 bg-designstudio-primary-50/50 rounded-full flex items-center justify-center mb-6">
+          <Construction size={40} className="text-designstudio-primary-500 animate-pulse" />
+        </div>
 
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="E-Posta Giriniz"
-              className={`w-full h-12 px-4 bg-surface-50 border rounded-radius-8 text-sm outline-none focus:ring-2 focus:ring-base-primary-500 transition-all 
-                ${errors.email ? 'border-status-danger-500' : 'border-surface-200'}`}
-            />
-          </div>
+        <h1 className="text-2xl font-bold text-text-primary mb-4">
+          Çok Yakında Buradayız
+        </h1>
+        
+        <p className="text-text-secondary text-sm leading-relaxed max-w-[400px] mb-10">
+          Flex OS eğitim yönetim sistemi şu an geliştirme aşamasında. 
+          Alparslan ve ekibi arka tarafta harikalar yaratıyor.
+        </p>
 
-          {/* PAROLA ALANI */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-bold text-text-primary uppercase tracking-wider opacity-80">
-              Parola
-            </label>
-            <div className="relative w-full">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full h-12 pl-4 pr-12 bg-surface-50 border border-surface-200 rounded-radius-8 text-sm outline-none focus:ring-2 focus:ring-base-primary-500 transition-all"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-placeholder hover:text-text-secondary cursor-pointer"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
+        {/* Gizli Giriş Kapısı */}
+        <Link 
+          href="/login" 
+          className="flex items-center gap-2 text-text-placeholder hover:text-designstudio-primary-500 transition-colors text-xs font-semibold uppercase tracking-widest group"
+        >
+          <Lock size={14} className="group-hover:rotate-12 transition-transform" />
+          <span>Personel Girişi</span>
+        </Link>
 
-          <div className="flex justify-between items-center">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox" className="w-4 h-4 rounded accent-designstudio-primary-500" />
-              <span className="text-xs text-text-secondary font-medium group-hover:text-text-primary transition-colors">Beni Hatırla</span>
-            </label>
-            <button type="button" className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors cursor-pointer">
-              Şifremi Unuttum
-            </button>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full h-12 mt-2 bg-linear-to-r from-designstudio-primary-400 to-designstudio-primary-600 text-text-inverse rounded-radius-8 font-bold flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg cursor-pointer disabled:opacity-70"
-          >
-            {isLoading ? <Loader2 className="animate-spin" size={20} /> : (
-              <>
-                <span>Sisteme Giriş Yap</span>
-                <ChevronRight size={18} />
-              </>
-            )}
-          </button>
-        </form>
-
-        <div className="mt-10 text-center text-[10px] text-text-placeholder font-bold uppercase tracking-widest opacity-40">
-          FlexOS Management System V2.0
+        <div className="absolute bottom-8 text-[11px] text-text-placeholder font-bold opacity-40 uppercase tracking-tighter">
+          © 2026 TASARIM ATÖLYESİ - TÜM HAKLARI SAKLIDIR
         </div>
       </div>
     </div>

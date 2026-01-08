@@ -87,6 +87,7 @@
   --color-text-secondary: #414B59;
   --color-text-tertiary: #8E95A3;
   --color-text-placeholder: #AEB4C0;
+  --color-text-muted: #9BA9B1; 
   --color-text-disabled: #CDD2DA;
   --color-text-inverse: #FFFFFF;
   --color-text-base-primary: #3A7BD5;
@@ -211,9 +212,9 @@
 @utility display-sm { font-family: var(--font-inter); font-size: var(--font-size-11xl); font-weight: var(--font-weight-extrabold); line-height: var(--line-height-9xl); letter-spacing: var(--letter-spacing-sm); }
 
 /* 4. UI Helper */
-@utility ui-helper-md { font-family: var(--font-inter); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); line-height: var(--line-height-md); letter-spacing: var(--letter-spacing-md); }
-@utility ui-helper-sm { font-family: var(--font-inter); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); line-height: var(--line-height-sm); letter-spacing: var(--letter-spacing-md); }
-@utility ui-helper-xs { font-family: var(--font-inter); font-size: var(--font-size-2xs); font-weight: var(--font-weight-medium); line-height: var(--line-height-xs); letter-spacing: var(--letter-spacing-md); }
+@utility ui-helper-md { font-family: var(--font-inter); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); line-height: var(--line-height-md); letter-spacing: var(--letter-spacing-md); }
+@utility ui-helper-sm { font-family: var(--font-inter); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); line-height: var(--line-height-sm); letter-spacing: var(--letter-spacing-md); }
+@utility ui-helper-xs { font-family: var(--font-inter); font-size: var(--font-size-2xs); font-weight: var(--font-weight-semibold); line-height: var(--line-height-xs); letter-spacing: var(--letter-spacing-md); }
 
 /* 5. UI Label */
 @utility ui-label-default { font-family: var(--font-inter); font-size: var(--font-size-md); font-weight: var(--font-weight-medium); line-height: var(--line-height-xl); letter-spacing: var(--letter-spacing-md); }

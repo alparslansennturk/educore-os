@@ -1,14 +1,15 @@
-import { MessageType } from './constants';
+/**
+ * FLEX OS - Merkezi Mesaj Sözlüğü
+ * Tasarım Atölyesi Standartları (2026)
+ */
+
+export type MessageType = 'error' | 'warning' | 'info' | 'success';
 
 export interface FlexMessage {
   text: string;
   type: MessageType;
 }
 
-/**
- * FLEX OS - Merkezi Mesaj Sözlüğü
- * Güvenlik standartları gereği kullanıcı/şifre hataları tek tip mesajda toplandı.
- */
 export const FLEX_MESSAGES: Record<string, FlexMessage> = {
   // --- AUTH HATALARI (Giriş Güvenliği Standartı) ---
   'auth/invalid-email': {
@@ -28,6 +29,16 @@ export const FLEX_MESSAGES: Record<string, FlexMessage> = {
     type: 'error'
   },
 
+  // --- AKTİVASYON VE ŞİFRE HATALARI (Yeni) ---
+  'auth/password-criteria-failed': {
+    text: 'Parola kriterleri karşılanmıyor',
+    type: 'error'
+  },
+  'auth/passwords-do-not-match': {
+    text: 'Parolalar eşleşmiyor',
+    type: 'error'
+  },
+
   // --- UYARILAR ---
   'auth/weak-password': {
     text: 'Seçtiğiniz şifre güvenlik standartlarının altında.',
@@ -44,19 +55,24 @@ export const FLEX_MESSAGES: Record<string, FlexMessage> = {
     type: 'info'
   },
 
-  // --- BAŞARI ---
+  // --- BAŞARI MESAJLARI ---
   'auth/login-success': {
     text: 'Giriş başarılı. Hoş geldiniz!',
+    type: 'success'
+  },
+  'auth/activation-success': {
+    text: 'Hesap başarıyla aktifleştirildi',
     type: 'success'
   }
 };
 
 /**
  * Gelen koda göre merkezi sözlükten mesajı döner.
+ * Eğer kod bulunamazsa standart bir hata mesajı döndürür.
  */
 export const getFlexMessage = (code: string): FlexMessage => {
   return FLEX_MESSAGES[code] || { 
-    text: 'Beklenmedik bir durum oluştu.', 
+    text: 'beklenmedik bir durum oluştu.', 
     type: 'error' 
   };
 };
