@@ -4,38 +4,43 @@ import React, { useState } from "react";
 import { KeyRound, ChevronRight, Loader2, ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
 import { getFlexMessage } from "../../lib/messages";
+import { auth } from "../../lib/firebase"; // Firebase bağlantısı
+import { sendPasswordResetEmail } from "firebase/auth";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
-  // GERÇEK AKIŞ: Başlangıçta mesajlar kapalı. 
-  // (Test etmek istersen isSent'i true yapabilirsin)
-  const [isSent, setIsSent] = useState(true); 
+  const [isSent, setIsSent] = useState(false); // Başlangıçta false olmalı
   const [error, setError] = useState(""); 
   const [shouldShake, setShouldShake] = useState(false);
 
-  const handleResetRequest = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsSent(false);
-    setShouldShake(false);
-    setIsLoading(true);
+  const handleResetRequest = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  setIsSent(false);
+  setShouldShake(false);
+  setIsLoading(true);
 
-    // GERÇEK TEST SİMÜLASYONU
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // Senaryo: Kullanıcı yoksa titret ve mesajı messages.ts'den çek
-      const userNotFoundError = getFlexMessage('auth/user-not-found').text;
-      setError(userNotFoundError);
-      setShouldShake(true);
-
-      // Başarı durumunda isSent(true) yapılacak ve error("") olacak.
-      
-      setTimeout(() => setShouldShake(false), 500);
-    }, 1000);
+  // MÜHÜR: Firebase'e gidilecek tam adresi koldan dayatıyoruz
+  const actionCodeSettings = {
+    url: 'https://flex-five-delta.vercel.app/login/activation',
+    handleCodeInApp: true,
   };
+
+  try {
+    // Burada actionCodeSettings'i parametre olarak ekliyoruz
+    await sendPasswordResetEmail(auth, email, actionCodeSettings);
+    
+    setIsLoading(false);
+    setIsSent(true);
+  } catch (err: any) {
+    setIsLoading(false);
+    setShouldShake(true);
+    // Hata mesajı yönetimi...
+    setError(getFlexMessage('auth/user-not-found').text);
+    setTimeout(() => setShouldShake(false), 500);
+  }
+};
 
   return (
     <div 
@@ -58,7 +63,6 @@ export default function ForgotPasswordPage() {
 
       <div className={`w-full max-w-[614px] bg-surface-white p-[56px] rounded-radius-16 shadow-2xl flex flex-col relative transition-all duration-300 origin-center 2xl:scale-110 ${shouldShake ? "animate-fast-shake" : ""}`}>
         
-        {/* Üst Bilgi: İkon + Başlık | Sağda Logo */}
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-2">
             <KeyRound size={24} style={{ color: 'var(--color-neutral-900)' }} />
@@ -75,7 +79,6 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleResetRequest} className="w-full flex flex-col font-inter">
           <div className="flex flex-col gap-6">
             
-            {/* E-Posta Alanı */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-end h-5">
                 <label className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>E-Posta</label>
@@ -96,13 +99,14 @@ export default function ForgotPasswordPage() {
                   backgroundColor: error ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
                   color: 'var(--color-text-primary)'
                 }}
+                required
               />
             </div>
 
             <div className="flex flex-col pt-2">
               <button 
                 type="submit" 
-                disabled={isLoading} 
+                disabled={isLoading || isSent} 
                 className="w-full h-12 rounded-radius-8 font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-80 shadow-lg"
                 style={{ 
                   backgroundColor: 'var(--color-designstudio-primary-500)', 
@@ -115,6 +119,8 @@ export default function ForgotPasswordPage() {
                     <Loader2 className="animate-spin" size={20} />
                     <span className="ui-helper-sm tracking-wide font-semibold">Kontrol Ediliyor...</span>
                   </div>
+                ) : isSent ? (
+                  <Check size={20} />
                 ) : (
                   <>
                     <span>Devam Et</span>
@@ -123,7 +129,6 @@ export default function ForgotPasswordPage() {
                 )}
               </button>
 
-              {/* Alt Linkler ve Durum Mesajları */}
               <div className="mt-6 flex justify-between items-center w-full">
                 <Link 
                   href="/login" 
@@ -134,7 +139,6 @@ export default function ForgotPasswordPage() {
                   <span>Giriş Ekranına Geri Dön</span>
                 </Link>
 
-                {/* Başarı Mesajı: Sadece işlem başarılı olduğunda sağ altta jilet gibi belirecek */}
                 {isSent && (
                   <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-300">
                     <Check size={16} strokeWidth={3} style={{ color: 'var(--color-status-success-500)' }} />

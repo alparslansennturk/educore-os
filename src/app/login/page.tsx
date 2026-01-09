@@ -3,9 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, ChevronRight, Loader2, Check } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Yönlendirme için
-import { auth } from "../lib/firebase"; // Firebase bağlantımız
-import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase giriş fonksiyonu
+import { useRouter } from "next/navigation"; 
+import { auth, db } from "../lib/firebase"; // db eklendi
+import { 
+  signInWithEmailAndPassword, 
+  setPersistence, 
+  browserLocalPersistence, 
+  browserSessionPersistence 
+} from "firebase/auth"; 
+import { doc, getDoc } from "firebase/firestore"; // Firestore fonksiyonları eklendi
 import { getFlexMessage } from "../lib/messages";
 
 export default function LoginPage() {
@@ -31,14 +37,31 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Gerçek Firebase Giriş İşlemi
-      await signInWithEmailAndPassword(auth, email, password);
+      const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+      await setPersistence(auth, persistenceType);
+
+      // 1. Firebase Auth Girişi
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 2. Aktivasyon Kontrolü (Firestore)
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        
+        // Eğer hesap henüz aktif değilse aktivasyon sayfasına fırlat
+        if (userData.isActivated === false) {
+          router.push("/login/activation");
+          return;
+        }
+      }
       
-      // Giriş başarılıysa Dashboard'a uçuyoruz
+      // Giriş başarılı ve hesap aktifse Dashboard'a uçuyoruz
       router.push("/dashboard");
     } catch (error: any) {
       console.error("Giriş Hatası:", error.code);
-      // Firebase'den gelen hata koduna göre mesajı getiriyoruz
       const messageObj = getFlexMessage(error.code);
       setErrors({ general: messageObj.text });
       setShake(true);
@@ -113,19 +136,24 @@ export default function LoginPage() {
           <div className="flex flex-col gap-2">
             <label className="text-sm font-bold">Parola</label>
             <div className="relative w-full">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full h-12 pl-4 pr-12 border rounded-radius-8 text-sm outline-none transition-all duration-200"
-                style={{ 
-                  borderColor: errors.general ? 'var(--color-status-danger-500)' : 'var(--color-surface-200)',
-                  backgroundColor: errors.general ? 'var(--color-status-danger-50)' : 'var(--color-surface-50)',
-                  color: 'var(--color-text-primary)'
-                }}
-                required
-              />
+             <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin(e);
+                }
+              }}
+              placeholder="••••••••••••"
+              className="w-full h-12 pl-4 pr-12 border rounded-radius-8 text-sm outline-none transition-all duration-200"
+              style={{ 
+                borderColor: 'var(--color-surface-200)',
+                backgroundColor: 'var(--color-surface-50)',
+                color: 'var(--color-text-primary)'
+              }}
+              required
+            />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer transition-colors" style={{ color: 'var(--color-text-placeholder)' }}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
