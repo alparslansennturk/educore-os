@@ -23,20 +23,22 @@ export default function ForgotPasswordPage() {
 
   // MÜHÜR: Firebase'e gidilecek tam adresi koldan dayatıyoruz
   const actionCodeSettings = {
-    url: 'https://flex-five-delta.vercel.app/login/activation',
+    // Buradaki URL'in sonuna slash koyalım ve tam yolu verelim
+    url: 'https://flex-five-delta.vercel.app/login/activation/', 
     handleCodeInApp: true,
   };
 
   try {
-    // Burada actionCodeSettings'i parametre olarak ekliyoruz
+    // actionCodeSettings'i buraya eklediğinden emin ol
     await sendPasswordResetEmail(auth, email, actionCodeSettings);
     
     setIsLoading(false);
     setIsSent(true);
+    setError("");
   } catch (err: any) {
     setIsLoading(false);
     setShouldShake(true);
-    // Hata mesajı yönetimi...
+    // Hata yönetimi (messages.ts'den çekiyoruz)
     setError(getFlexMessage('auth/user-not-found').text);
     setTimeout(() => setShouldShake(false), 500);
   }
