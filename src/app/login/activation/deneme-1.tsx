@@ -17,7 +17,7 @@ function ActivationContent() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false); 
+  const [isSuccess, setIsSuccess] = useState(true); 
   const [error, setError] = useState("");
   const [shouldShake, setShouldShake] = useState(false);
 
